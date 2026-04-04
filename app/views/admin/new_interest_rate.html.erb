@@ -1,0 +1,139 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="h2">Add New Interest Rate</h1>
+      <%= link_to "Back to Interest Rates", admin_interest_rates_path, class: "btn btn-outline-secondary mb-3" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <%= form_with model: @interest_rate, url: admin_create_interest_rate_path, local: true do |form| %>
+            <% if @interest_rate.errors.any? %>
+              <div class="alert alert-danger">
+                <h6>Please fix the following errors:</h6>
+                <ul class="mb-0">
+                  <% @interest_rate.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :loan_type, "Loan Type Code", class: "form-label" %>
+                  <%= form.select :loan_type,
+                      InterestRate.loan_type_options,
+                      { prompt: 'Select Loan Type' },
+                      { class: "form-select", id: "loan_type_select", required: true } %>
+                  <small class="text-muted">Or enter a custom code below</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :loan_type, "Custom Loan Type Code", class: "form-label" %>
+                  <%= form.text_field :loan_type, class: "form-control", id: "loan_type_custom", placeholder: "e.g., NEW_LOAN" %>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :loan_type_name, "Loan Type Description", class: "form-label" %>
+              <%= form.text_field :loan_type_name, class: "form-control", required: true, placeholder: "e.g., Mortgage Loan" %>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <%= form.label :rate, "Interest Rate (%)", class: "form-label" %>
+                  <%= form.number_field :rate, class: "form-control", step: 0.01, min: 0, max: 100, required: true, placeholder: "e.g., 12.5" %>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <%= form.label :min_amount, "Minimum Amount (Rs.)", class: "form-label" %>
+                  <%= form.number_field :min_amount, class: "form-control", min: 0, placeholder: "Optional" %>
+                  <small class="text-muted">Leave blank if not applicable</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <%= form.label :max_amount, "Maximum Amount (Rs.)", class: "form-label" %>
+                  <%= form.number_field :max_amount, class: "form-control", min: 0, placeholder: "Optional" %>
+                  <small class="text-muted">Leave blank if not applicable</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-info">
+              <strong>Note:</strong> Amount ranges are used for loans like Housing Loan where interest rate varies based on loan amount. For most loan types, leave these fields blank.
+            </div>
+
+            <div class="mb-3">
+              <div class="form-check">
+                <%= form.check_box :active, class: "form-check-input", checked: true %>
+                <%= form.label :active, "Active", class: "form-check-label" %>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <%= form.submit "Create Interest Rate", class: "btn btn-success" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Loan Type Codes</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% InterestRate.loan_type_hash.each do |code, name| %>
+                <tr>
+                  <td><code><%= code %></code></td>
+                  <td><%= name %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <% if current_user.super_admin? %>
+            <div class="mt-2">
+              <%= link_to "Manage Loan Types", admin_loan_types_path, class: "btn btn-sm btn-outline-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const selectField = document.getElementById('loan_type_select');
+  const customField = document.getElementById('loan_type_custom');
+
+  selectField.addEventListener('change', function() {
+    if (this.value) {
+      customField.value = this.value;
+    }
+  });
+
+  customField.addEventListener('input', function() {
+    selectField.value = '';
+  });
+});
+</script>

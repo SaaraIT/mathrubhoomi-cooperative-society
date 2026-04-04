@@ -1,0 +1,97 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+  <div class="position-sticky" style="top: 0;">
+    <div class="sidebar-scroll1">
+      <ul class="nav flex-column">
+        <li class="nav-item" style="padding-top: 20px">
+          <a class="nav-link <%= 'active' if current_page?(members_path) %>" href="<%= members_path %>">
+            <span data-feather="users" class="me-2"></span>
+            A Class Memberships
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(additional_shares_applications_path) %>" href="<%= additional_shares_applications_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Additional Shares
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(self_help_groups_path) %>" href="<%= self_help_groups_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Self Help Groups
+          </a>
+        </li>
+      </ul>
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Loan Forms</span>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(loan_applications_path) %>" href="<%= loan_applications_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Loan Applications
+          </a>
+        </li>
+
+
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?('/jewel_loans') %>" href="/jewel_loans">
+            <span data-feather="file" class="me-2"></span>
+            Jewel Loans
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?('/shg_loan_applications') %>" href="/shg_loan_applications">
+            <span data-feather="credit-card" class="me-2"></span>
+            SHG Loans
+          </a>
+        </li>
+      </ul>
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Other Forms</span>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(term_loan_agreements_path) %>" href="<%= term_loan_agreements_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Term Loan Agreements
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(guarantor_undertakings_path) %>" href="<%= guarantor_undertakings_path %>">
+            <span data-feather="smartphone" class="me-2"></span>
+            Letter Of Undertaking
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(hypothecation_deeds_path) %>" href="<%= hypothecation_deeds_path %>">
+            <span data-feather="square" class="me-2"></span>
+            Hypothecation Deeds
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(income_declarations_path) %>" href="<%= income_declarations_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Income Declaration
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(demand_promissory_notes_path) %>" href="<%= demand_promissory_notes_path %>">
+            <span data-feather="file-minus" class="me-2"></span>
+            Demand Pro Note
+          </a>
+        </li>
+        <li class="nav-item" style="margin-bottom: 30px">
+          <a class="nav-link <%= 'active' if request.path.match?(pro_notes_path) %>" href="<%= pro_notes_path %>">
+            <span data-feather="file-plus" class="me-2"></span>
+            Pro Notes
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

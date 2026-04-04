@@ -1,0 +1,60 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4>Request Edit Permission</h4>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <strong>Resource Type:</strong> <%= @resource_type.underscore.humanize.titleize %><br>
+            <strong>Resource:</strong>
+            <% case @resource_type %>
+            <% when 'Member' %>
+              <%= @resource.name %> (<%= @resource.mobile_number %>)
+            <% when 'LoanApplication' %>
+              Loan #<%= @resource.id %> - <%= @resource.member.name %>
+            <% when 'JewelLoan' %>
+              Jewel Loan #<%= @resource.id %> - <%= @resource.member.name %>
+            <% when 'ShgLoanApplication' %>
+              SHG Loan #<%= @resource.id %> - <%= @resource.shg_name %>
+            <% when 'HypothecationDeed' %>
+              Hypothecation Deed #<%= @resource.id %> - <%= @resource.member&.name %>
+            <% when 'GuarantorUndertaking' %>
+              Guarantor Undertaking #<%= @resource.id %> - <%= @resource.member&.name %>
+            <% else %>
+              #<%= @resource.id %>
+            <% end %>
+          </div>
+
+          <%= form_with model: @edit_request, url: edit_requests_path, local: true do |f| %>
+            <% if @edit_request.errors.any? %>
+              <div class="alert alert-danger">
+                <h5><%= pluralize(@edit_request.errors.count, "error") %> prevented this request from being submitted:</h5>
+                <ul class="mb-0">
+                  <% @edit_request.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <%= f.hidden_field :resource_type %>
+            <%= f.hidden_field :resource_id %>
+
+            <div class="mb-3">
+              <%= f.label :reason, "Reason for Edit Request", class: "form-label" %>
+              <%= f.text_area :reason, class: "form-control", rows: 4, placeholder: "Please explain why you need to edit this record...", required: true %>
+              <div class="form-text">Provide a clear reason for your edit request. This will be reviewed by the administrator.</div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <%= link_to "Cancel", :back, class: "btn btn-secondary" %>
+              <%= f.submit "Submit Edit Request", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

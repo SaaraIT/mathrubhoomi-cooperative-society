@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Request Edit Permission</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <strong>Loan Details:</strong>
+            <ul class="mb-0 mt-2">
+              <li><strong>Loan Type:</strong> <%= @loan_type.underscore.humanize %></li>
+              <% if @loan_type == 'LoanApplication' && @loan.respond_to?(:member) %>
+                <li><strong>Member:</strong> <%= @loan.member&.name %></li>
+                <li><strong>Loan Amount:</strong> <%= number_to_currency(@loan.loan_amount, unit: "\u20B9", precision: 0) %></li>
+              <% elsif @loan_type == 'ShgLoanApplication' && @loan.respond_to?(:self_help_group) %>
+                <li><strong>SHG:</strong> <%= @loan.self_help_group&.name %></li>
+                <li><strong>Loan Amount:</strong> <%= number_to_currency(@loan.loan_amount, unit: "\u20B9", precision: 0) %></li>
+              <% elsif @loan_type == 'JewelLoan' && @loan.respond_to?(:member) %>
+                <li><strong>Member:</strong> <%= @loan.member&.name %></li>
+                <li><strong>Loan Amount:</strong> <%= number_to_currency(@loan.loan_amount, unit: "\u20B9", precision: 0) %></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <%= form_with model: @edit_request, local: true do |f| %>
+            <% if @edit_request.errors.any? %>
+              <div class="alert alert-danger">
+                <h6>Please fix the following errors:</h6>
+                <ul class="mb-0">
+                  <% @edit_request.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <%= f.hidden_field :loan_type, value: @loan_type %>
+            <%= f.hidden_field :loan_id, value: @loan_id %>
+
+            <div class="mb-3">
+              <%= f.label :edit_reason, "Reason for Edit Request", class: "form-label" %>
+              <%= f.text_area :edit_reason, class: "form-control", rows: 4, placeholder: "Please explain why you need to edit this loan application...", required: true %>
+              <div class="form-text">Provide a clear reason for your edit request. This will be reviewed by the admin.</div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <%= link_to "Cancel", :back, class: "btn btn-secondary" %>
+              <%= f.submit "Submit Edit Request", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

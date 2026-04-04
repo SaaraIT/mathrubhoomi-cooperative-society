@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title><%= content_for?(:title) || "Dashboard" %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+
+  <link href="https://cdn.jsdelivr.net/npm/slim-select@2.8.1/dist/slimselect.css" rel="stylesheet" />
+
+  <%= javascript_importmap_tags %>
+ 
+
+</head>
+<body id="main">
+  <%= render 'shared/navbar' %>
+  <div class="container-fluid">
+    <div class="row">
+      <% if current_user&.super_admin? || current_user&.section_head? %>
+        <%= render 'shared/admin_sidebar' %>
+      <% else %>
+        <%= render 'shared/sidebar' %>
+      <% end %>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4">
+        <% if notice %>
+          <div class="alert alert-success">
+            <%= notice %>
+          </div>
+        <% end %>
+
+        <% if alert %>
+          <div class="alert alert-danger">
+            <%= alert %>
+          </div>
+        <% end %>
+
+        <%= yield %>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

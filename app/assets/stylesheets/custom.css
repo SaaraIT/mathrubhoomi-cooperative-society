@@ -1,0 +1,184 @@
+
+body{background-color: #efeff3 !important}
+
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap);
+body {
+    font-family: Inter,sans-serif;
+    overflow-x: hidden!important;
+    font-size: .9375rem;
+    color: #212529;
+    background-color: #fff
+}
+.sidebar{background: white}
+.main-nav{margin-left: 100px}
+.navbar.navbar-dark {
+    background: #205583 !important;
+}
+
+.list-table tr th{background: #ddd; padding: 10px 5px}
+.list-table.table{border: 1px solid #ccc}
+.list-table.table tbody tr td, .list-table.table tbody tr th{border-color:  #eee !important;}
+.table tbody tr td {background: none;}
+
+.fixed-label .input-field label {
+    display: inline-block; 
+    padding-right: 10px;
+    min-width: 300px;
+}
+select {
+    word-wrap: normal;
+    background: #fff;
+    padding: 3px;
+}
+
+input, button, select, optgroup, textarea {
+    border: 1px solid #bbb;
+    padding: 5px;
+}
+
+.btn-secondary{background: #7c848b}
+
+.feather {
+  width: 16px !important;
+  height: 16px !important;
+  vertical-align: middle;
+}
+
+.search-table.table  tbody tr td, .search-table.table  tbody tr th{background: none}
+/* Sidebar Base */
+.sidebar {
+  background: #fff;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100; /* Behind navbar */
+  padding: 48px 0 0; /* Space for navbar */
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Sidebar Scroll Area */
+.sidebar-scroll {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem 0;
+}
+
+/* Sidebar Sticky (inside sidebar) */
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Sidebar Menu (optional if you use #sidebarMenu separately) */
+#sidebarMenu {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#sidebarMenu ul {
+  overflow: visible; /* important: don't make UL itself scroll */
+}
+/* Sidebar Links */
+.sidebar .nav-link {
+  font-weight: 500;
+  color: #333;
+  font-size: 15px;
+}
+
+.sidebar .nav-link .feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 4px;
+  color: #727272;
+}
+
+.sidebar .nav-link.active {
+  color: #2470dc;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+  color: inherit;
+}
+
+/* Sidebar Headings */
+.sidebar-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  color: #6c757d;
+}
+
+
+/*
+ * Navbar
+ */
+
+.navbar-brand {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  font-size: 1rem;
+  /*background-color: rgba(0, 0, 0, .25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);*/
+}
+
+.navbar .navbar-toggler {
+  top: .25rem;
+  right: 1rem;
+}
+
+.navbar .form-control {
+  padding: .75rem 1rem;
+  border-width: 0;
+  border-radius: 0;
+}
+
+.form-control-dark {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .1);
+}
+
+.form-control-dark:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+/* Print Styles */
+@media print {
+  .sidebar,
+  .navbar,
+  .no-print,
+  form,
+  .btn {
+    display: none !important;
+  }
+
+  .col-md-10 {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+
+  .table {
+    font-size: 12px;
+  }
+
+  .badge {
+    border: 1px solid #000;
+    color: #000 !important;
+    background: none !important;
+  }
+}

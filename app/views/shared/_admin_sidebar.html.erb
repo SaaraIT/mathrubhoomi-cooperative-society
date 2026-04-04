@@ -1,0 +1,137 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+  <div class="position-sticky" style="top: 0;">
+    <div class="sidebar-scroll1">
+      <ul class="nav flex-column">
+        <li class="nav-item" style="padding-top: 20px">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin(\/dashboard)?$/) %>" href="<%= admin_dashboard_path %>">
+            <span data-feather="home" class="me-2"></span>
+            Dashboard
+          </a>
+        </li>
+
+        <% if current_user.super_admin? %>
+          <li class="nav-item">
+            <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/branches/) %>" href="<%= admin_branches_path %>">
+              <span data-feather="grid" class="me-2"></span>
+              Branches
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/users/) %>" href="<%= admin_users_path %>">
+              <span data-feather="users" class="me-2"></span>
+              Users
+            </a>
+          </li>
+        <% end %>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/interest_rates/) %>" href="<%= admin_interest_rates_path %>">
+            <span data-feather="percent" class="me-2"></span>
+            Interest Rates
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/loan_types/) %>" href="<%= admin_loan_types_path %>">
+            <span data-feather="tag" class="me-2"></span>
+            Loan Types
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/loan_purposes/) %>" href="<%= admin_loan_purposes_path %>">
+            <span data-feather="target" class="me-2"></span>
+            Loan Purposes
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/edit_requests/) %>" href="<%= admin_edit_requests_path %>">
+            <span data-feather="edit-3" class="me-2"></span>
+            Edit Requests
+            <% pending_count = EditRequest.pending.count %>
+            <% if pending_count > 0 %>
+              <span class="badge bg-danger ms-1"><%= pending_count %></span>
+            <% end %>
+          </a>
+        </li>
+      </ul>
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>All Records</span>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/memberships/) %>" href="<%= admin_memberships_path %>">
+            <span data-feather="user-plus" class="me-2"></span>
+            Memberships
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/loan_applications/) %>" href="<%= admin_loan_applications_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Loan Applications
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/jewel_loans/) %>" href="<%= admin_jewel_loans_path %>">
+            <span data-feather="file" class="me-2"></span>
+            Jewel Loans
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(/^\/admin\/shg_loans/) %>" href="<%= admin_shg_loans_path %>">
+            <span data-feather="credit-card" class="me-2"></span>
+            SHG Loans
+          </a>
+        </li>
+      </ul>
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Other Forms</span>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(term_loan_agreements_path) %>" href="<%= term_loan_agreements_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Term Loan Agreements
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(guarantor_undertakings_path) %>" href="<%= guarantor_undertakings_path %>">
+            <span data-feather="smartphone" class="me-2"></span>
+            Letter Of Undertaking
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(hypothecation_deeds_path) %>" href="<%= hypothecation_deeds_path %>">
+            <span data-feather="square" class="me-2"></span>
+            Hypothecation Deeds
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(income_declarations_path) %>" href="<%= income_declarations_path %>">
+            <span data-feather="file-text" class="me-2"></span>
+            Income Declaration
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.match?(demand_promissory_notes_path) %>" href="<%= demand_promissory_notes_path %>">
+            <span data-feather="file-minus" class="me-2"></span>
+            Demand Pro Note
+          </a>
+        </li>
+        <li class="nav-item" style="margin-bottom: 30px">
+          <a class="nav-link <%= 'active' if request.path.match?(pro_notes_path) %>" href="<%= pro_notes_path %>">
+            <span data-feather="file-plus" class="me-2"></span>
+            Pro Notes
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

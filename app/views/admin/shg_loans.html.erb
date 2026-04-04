@@ -1,0 +1,91 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">All SHG Loans</h1>
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="window.print()">
+          <i class="bi bi-printer"></i> Print
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <%= form_tag admin_shg_loans_path, method: :get, class: "row g-2 align-items-end" do %>
+        <div class="col-md-2">
+          <label class="form-label small">Branch</label>
+          <%= select_tag :branch_id,
+              options_from_collection_for_select(@branches, :id, :name, params[:branch_id]),
+              include_blank: "All Branches",
+              class: "form-select form-select-sm" %>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Applicant Name</label>
+          <%= text_field_tag :name, params[:name], class: "form-control form-control-sm", placeholder: "Search name..." %>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Mobile</label>
+          <%= text_field_tag :mobile, params[:mobile], class: "form-control form-control-sm", placeholder: "Search mobile..." %>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Aadhaar</label>
+          <%= text_field_tag :aadhaar, params[:aadhaar], class: "form-control form-control-sm", placeholder: "Search aadhaar..." %>
+        </div>
+        <div class="col-md-2">
+          <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
+          <%= link_to "Clear", admin_shg_loans_path, class: "btn btn-outline-secondary btn-sm" %>
+        </div>
+        <div class="col-md-2 text-end">
+          <span class="text-muted small">Total: <%= @shg_loans.count %> loans</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>SHG Name</th>
+                  <th>Total Amount</th>
+                  <th>Applicants</th>
+                  <th>Branch</th>
+                  <th>Date</th>
+                  <th>Created By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @shg_loans.each do |loan| %>
+                  <tr>
+                    <td>
+                      <%= loan.self_help_group&.name %>
+                    </td>
+                    <td><%= number_to_currency(loan.loan_amount, unit: "Rs. ", precision: 0) rescue loan.loan_amount %></td>
+                    <td>
+                      <span class="badge bg-secondary"><%= loan.shg_loan_applicants.count %> applicants</span>
+                    </td>
+                    <td>
+                      <span class="badge bg-info"><%= loan.cooperative_branch&.name %></span>
+                    </td>
+                    <td><%= loan.created_at.strftime("%d %b %Y") %></td>
+                    <td><%= loan.creator&.name %></td>
+                    <td>
+                      <%= link_to "View", self_help_group_shg_loan_application_path(loan.self_help_group, loan), class: "btn btn-sm btn-outline-primary", target: "_blank" %>
+                      <%= link_to "Edit", edit_self_help_group_shg_loan_application_path(loan.self_help_group, loan), class: "btn btn-sm btn-warning", target: "_blank" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

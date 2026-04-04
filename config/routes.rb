@@ -1,0 +1,132 @@
+Rails.application.routes.draw do
+  get "cooperative_branches/edit"
+  resources :loan_applications
+  devise_for :users
+
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  resources :memberships
+  resources :members do
+    collection do
+      get :search
+    end
+
+    resources :loan_applications do
+      resources :guarantor_undertakings
+      resources :term_loan_agreements
+      resources :pro_notes
+      resources :demand_promissory_notes
+      resources :hypothecation_deeds
+    end
+
+    resources :income_declarations
+    resources :jewel_loans do
+      resources :jewel_appraisers_reports
+      resources :jewel_loan_promissory_notes
+    end
+
+    resources :additional_shares_applications
+  end
+
+  resources :term_loan_agreements
+  resources :pro_notes
+  resources :demand_promissory_notes
+  resources :hypothecation_deeds
+  resources :income_declarations
+  resources :guarantor_undertakings
+   
+  resources :cooperative_branches
+  resources :jewel_loans
+  resources :additional_shares_applications
+  resources :shg_loan_applications do
+    resources :shg_personal_agreements
+    resources :shg_loan_pro_notes
+    resources :shg_term_loan_agreements
+    resources :shg_demand_promissory_notes
+  end
+
+  # ✅ Set the root path
+  root "members#index"
+  resources :self_help_groups do
+    resources :shg_loan_applications do
+      resources :shg_loan_pro_notes
+      resources :shg_term_loan_agreements
+      resources :shg_personal_agreements do
+        collection do
+          get :autocomplete
+        end
+      end
+    end
+  end
+
+  # Admin routes for super_admin
+  get 'admin', to: 'admin#dashboard'
+  get 'admin/dashboard', to: 'admin#dashboard'
+  
+  # Branch management routes
+  get 'admin/branches', to: 'admin#branches'
+  get 'admin/branches/new', to: 'admin#new_branch', as: 'admin_new_branch'
+  post 'admin/branches', to: 'admin#create_branch', as: 'admin_create_branch'
+  get 'admin/branches/:id', to: 'admin#show_branch', as: 'admin_show_branch'
+  get 'admin/branches/:id/edit', to: 'admin#edit_branch', as: 'admin_edit_branch'
+  patch 'admin/branches/:id', to: 'admin#update_branch', as: 'admin_update_branch'
+  delete 'admin/branches/:id', to: 'admin#destroy_branch', as: 'admin_destroy_branch'
+  
+  # User management routes
+  get 'admin/users', to: 'admin#users'
+  get 'admin/users/new', to: 'admin#new_user', as: 'admin_new_user'
+  post 'admin/users', to: 'admin#create_user', as: 'admin_create_user'
+  get 'admin/users/:id/edit', to: 'admin#edit_user', as: 'admin_edit_user'
+  patch 'admin/users/:id', to: 'admin#update_user', as: 'admin_update_user'
+  delete 'admin/users/:id', to: 'admin#destroy_user', as: 'admin_destroy_user'
+  patch 'admin/users/:id/transfer', to: 'admin#transfer_user', as: 'admin_transfer_user'
+  patch 'admin/users/:id/toggle_status', to: 'admin#toggle_user_status', as: 'admin_toggle_user_status'
+  patch 'admin/users/:id/change_role', to: 'admin#change_user_role', as: 'admin_change_user_role'
+
+  # Interest rate management routes
+  get 'admin/interest_rates', to: 'admin#interest_rates', as: 'admin_interest_rates'
+  get 'admin/interest_rates/new', to: 'admin#new_interest_rate', as: 'admin_new_interest_rate'
+  post 'admin/interest_rates', to: 'admin#create_interest_rate', as: 'admin_create_interest_rate'
+  get 'admin/interest_rates/:id/edit', to: 'admin#edit_interest_rate', as: 'admin_edit_interest_rate'
+  patch 'admin/interest_rates/:id', to: 'admin#update_interest_rate', as: 'admin_update_interest_rate'
+  delete 'admin/interest_rates/:id', to: 'admin#destroy_interest_rate', as: 'admin_destroy_interest_rate'
+  patch 'admin/interest_rates/:id/toggle', to: 'admin#toggle_interest_rate', as: 'admin_toggle_interest_rate'
+
+  # Loan type management routes
+  get 'admin/loan_types', to: 'admin#loan_types', as: 'admin_loan_types'
+  get 'admin/loan_types/new', to: 'admin#new_loan_type', as: 'admin_new_loan_type'
+  post 'admin/loan_types', to: 'admin#create_loan_type', as: 'admin_create_loan_type'
+  get 'admin/loan_types/:id/edit', to: 'admin#edit_loan_type', as: 'admin_edit_loan_type'
+  patch 'admin/loan_types/:id', to: 'admin#update_loan_type', as: 'admin_update_loan_type'
+  delete 'admin/loan_types/:id', to: 'admin#destroy_loan_type', as: 'admin_destroy_loan_type'
+  patch 'admin/loan_types/:id/toggle', to: 'admin#toggle_loan_type', as: 'admin_toggle_loan_type'
+
+  # Loan purpose management routes
+  get 'admin/loan_purposes', to: 'admin#loan_purposes', as: 'admin_loan_purposes'
+  get 'admin/loan_purposes/new', to: 'admin#new_loan_purpose', as: 'admin_new_loan_purpose'
+  post 'admin/loan_purposes', to: 'admin#create_loan_purpose', as: 'admin_create_loan_purpose'
+  get 'admin/loan_purposes/:id/edit', to: 'admin#edit_loan_purpose', as: 'admin_edit_loan_purpose'
+  patch 'admin/loan_purposes/:id', to: 'admin#update_loan_purpose', as: 'admin_update_loan_purpose'
+  delete 'admin/loan_purposes/:id', to: 'admin#destroy_loan_purpose', as: 'admin_destroy_loan_purpose'
+  patch 'admin/loan_purposes/:id/toggle', to: 'admin#toggle_loan_purpose', as: 'admin_toggle_loan_purpose'
+
+  # Admin view routes for all records
+  get 'admin/memberships', to: 'admin#memberships', as: 'admin_memberships'
+  get 'admin/memberships/:id', to: 'admin#show_membership', as: 'admin_show_membership'
+  get 'admin/loan_applications', to: 'admin#loan_applications', as: 'admin_loan_applications'
+  get 'admin/loan_applications/:id', to: 'admin#show_loan_application', as: 'admin_show_loan_application'
+  get 'admin/jewel_loans', to: 'admin#jewel_loans', as: 'admin_jewel_loans'
+  get 'admin/jewel_loans/:id', to: 'admin#show_jewel_loan', as: 'admin_show_jewel_loan'
+  get 'admin/shg_loans', to: 'admin#shg_loans', as: 'admin_shg_loans'
+  get 'admin/shg_loans/:id', to: 'admin#show_shg_loan', as: 'admin_show_shg_loan'
+
+  # Edit request routes (for super_admin approval)
+  get 'admin/edit_requests', to: 'admin#edit_requests', as: 'admin_edit_requests'
+  patch 'admin/edit_requests/:id/approve', to: 'admin#approve_edit_request', as: 'admin_approve_edit_request'
+  patch 'admin/edit_requests/:id/reject', to: 'admin#reject_edit_request', as: 'admin_reject_edit_request'
+
+  # Staff edit request routes (generic for all resource types)
+  resources :edit_requests, only: [:new, :create]
+
+  get '/members/:id/co_applicant_form', to: 'members#co_applicant_form'
+end

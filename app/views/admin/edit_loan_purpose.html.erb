@@ -1,0 +1,79 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="h2">Edit Loan Purpose: <%= @loan_purpose.name %></h1>
+      <%= link_to "Back to Loan Purposes", admin_loan_purposes_path, class: "btn btn-outline-secondary mb-3" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <%= form_with model: @loan_purpose, url: admin_update_loan_purpose_path(@loan_purpose), method: :patch, local: true do |form| %>
+            <% if @loan_purpose.errors.any? %>
+              <div class="alert alert-danger">
+                <h6>Please fix the following errors:</h6>
+                <ul class="mb-0">
+                  <% @loan_purpose.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= form.label :name, "Purpose Name", class: "form-label" %>
+              <%= form.text_field :name, class: "form-control", required: true %>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :description, "Description", class: "form-label" %>
+              <%= form.text_area :description, class: "form-control", rows: 3 %>
+            </div>
+
+            <div class="mb-3">
+              <div class="form-check">
+                <%= form.check_box :active, class: "form-check-input" %>
+                <%= form.label :active, "Active", class: "form-check-label" %>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <%= form.submit "Update Loan Purpose", class: "btn btn-success" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Current Settings</h5>
+        </div>
+        <div class="card-body">
+          <dl class="row mb-0">
+            <dt class="col-sm-5">Name:</dt>
+            <dd class="col-sm-7"><%= @loan_purpose.name %></dd>
+
+            <dt class="col-sm-5">Status:</dt>
+            <dd class="col-sm-7">
+              <% if @loan_purpose.active? %>
+                <span class="badge bg-success">Active</span>
+              <% else %>
+                <span class="badge bg-danger">Inactive</span>
+              <% end %>
+            </dd>
+
+            <dt class="col-sm-5">Created:</dt>
+            <dd class="col-sm-7"><%= @loan_purpose.created_at.strftime("%d %b %Y") %></dd>
+
+            <dt class="col-sm-5">Updated:</dt>
+            <dd class="col-sm-7"><%= @loan_purpose.updated_at.strftime("%d %b %Y") %></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

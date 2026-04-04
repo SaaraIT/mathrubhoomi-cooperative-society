@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="h2">Add New Loan Type</h1>
+      <%= link_to "Back to Loan Types", admin_loan_types_path, class: "btn btn-outline-secondary mb-3" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <%= form_with model: @loan_type, url: admin_create_loan_type_path, local: true do |form| %>
+            <% if @loan_type.errors.any? %>
+              <div class="alert alert-danger">
+                <h6>Please fix the following errors:</h6>
+                <ul class="mb-0">
+                  <% @loan_type.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :code, "Loan Type Code", class: "form-label" %>
+                  <%= form.text_field :code, class: "form-control", required: true, placeholder: "e.g., ML, VL, EL" %>
+                  <small class="text-muted">Unique code used to identify this loan type</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :name, "Loan Type Name", class: "form-label" %>
+                  <%= form.text_field :name, class: "form-control", required: true, placeholder: "e.g., Mortgage Loan" %>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :description, "Description", class: "form-label" %>
+              <%= form.text_area :description, class: "form-control", rows: 3, placeholder: "Optional description of this loan type" %>
+            </div>
+
+            <div class="mb-3">
+              <div class="form-check">
+                <%= form.check_box :active, class: "form-check-input", checked: true %>
+                <%= form.label :active, "Active", class: "form-check-label" %>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <%= form.submit "Create Loan Type", class: "btn btn-success" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Help</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Code:</strong> A short, unique identifier for the loan type (e.g., ML, VL, EL).</p>
+          <p><strong>Name:</strong> The full descriptive name of the loan type.</p>
+          <p><strong>Description:</strong> Optional additional information about this loan type.</p>
+          <p class="mb-0"><strong>Active:</strong> Only active loan types will appear in dropdown selections.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

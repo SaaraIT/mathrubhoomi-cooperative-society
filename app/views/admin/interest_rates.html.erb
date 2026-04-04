@@ -1,0 +1,126 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Interest Rate Configuration</h1>
+        <%= link_to "Add New Rate", admin_new_interest_rate_path, class: "btn btn-success" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-12 text-end">
+      <span class="text-muted">Total: <%= @interest_rates.count %> rates configured</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Loan Type</th>
+                  <th>Description</th>
+                  <th>Interest Rate</th>
+                  <th>Amount Range</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @interest_rates.each do |rate| %>
+                  <tr class="<%= 'table-secondary' unless rate.active? %>">
+                    <td>
+                      <strong><%= rate.loan_type %></strong>
+                    </td>
+                    <td><%= rate.loan_type_name %></td>
+                    <td>
+                      <span class="badge bg-primary fs-6"><%= number_with_precision(rate.rate, precision: 2) %>%</span>
+                    </td>
+                    <td>
+                      <% if rate.min_amount.present? || rate.max_amount.present? %>
+                        <% if rate.min_amount.present? && rate.max_amount.present? %>
+                          Rs. <%= number_to_indian_currency(rate.min_amount) %> - <%= number_to_indian_currency(rate.max_amount) %>
+                        <% elsif rate.min_amount.present? %>
+                          Above Rs. <%= number_to_indian_currency(rate.min_amount - 1) %>
+                        <% elsif rate.max_amount.present? %>
+                          Up to Rs. <%= number_to_indian_currency(rate.max_amount) %>
+                        <% end %>
+                      <% else %>
+                        <span class="text-muted">All amounts</span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if rate.active? %>
+                        <span class="badge bg-success">Active</span>
+                      <% else %>
+                        <span class="badge bg-danger">Inactive</span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= link_to "Edit", admin_edit_interest_rate_path(rate), class: "btn btn-sm btn-outline-secondary" %>
+                      <% if rate.active? %>
+                        <%= link_to "Deactivate",
+                            admin_toggle_interest_rate_path(rate),
+                            method: :patch,
+                            data: { confirm: "Are you sure you want to deactivate this rate?" },
+                            class: "btn btn-sm btn-outline-warning" %>
+                      <% else %>
+                        <%= link_to "Activate",
+                            admin_toggle_interest_rate_path(rate),
+                            method: :patch,
+                            class: "btn btn-sm btn-outline-success" %>
+                      <% end %>
+                      <%= link_to "Delete",
+                          admin_destroy_interest_rate_path(rate),
+                          method: :delete,
+                          data: { confirm: "Are you sure you want to delete this interest rate?" },
+                          class: "btn btn-sm btn-outline-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+
+                <% if @interest_rates.empty? %>
+                  <tr>
+                    <td colspan="6" class="text-center py-4">
+                      <p class="text-muted mb-2">No interest rates configured yet.</p>
+                      <%= link_to "Add First Interest Rate", admin_new_interest_rate_path, class: "btn btn-success" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Quick Reference - Loan Type Codes</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <% InterestRate::LOAN_TYPES.each do |code, name| %>
+              <div class="col-md-3 mb-2">
+                <strong><%= code %></strong> - <%= name %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Helper for Indian currency format %>
+<% def number_to_indian_currency(number)
+  return '0' if number.nil?
+  number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse.sub(/,/, ',')
+end %>

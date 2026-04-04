@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        font-size: 12px;
+        text-align: center;
+        margin: 0;
+      }
+      .creator {
+        display: none;
+      }
+    </style>
+    <script type="text/javascript">
+      function substitutePdfVariables() {
+        var vars = {};
+        var query = window.location.search.substring(1).split('&');
+        for (var i = 0; i < query.length; i++) {
+          var pair = query[i].split('=', 2);
+          vars[pair[0]] = decodeURIComponent(pair[1]);
+        }
+
+        var keys = ['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+        keys.forEach(function(key) {
+          var elements = document.getElementsByClassName(key);
+          for (var j = 0; j < elements.length; ++j) {
+            elements[j].textContent = vars[key];
+          }
+        });
+
+        // Show creator only on last page
+        if (vars['page'] === vars['topage']) {
+          var creatorElements = document.getElementsByClassName('creator');
+          for (var k = 0; k < creatorElements.length; k++) {
+            creatorElements[k].style.display = 'block';
+          }
+        }
+      }
+    </script>
+  </head>
+  <body onload="substitutePdfVariables()">
+    <table style="width: 100%;">
+      <tr>
+        <td style="text-align: left; width: 50%;" class="creator">Created By: <%= @shg_loan_application&.creator&.name %></td>
+        <td style="text-align: right; width: 50%; font-weight: bold;">Page <span class="page">?</span> of <span class="topage">?</span></td>
+      </tr>
+    </table>
+  </body>
+</html>

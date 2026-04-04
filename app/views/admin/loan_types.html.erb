@@ -1,0 +1,87 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Loan Types</h1>
+        <%= link_to "Add New Loan Type", admin_new_loan_type_path, class: "btn btn-success" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-12 text-end">
+      <span class="text-muted">Total: <%= @loan_types.count %> loan types configured</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Applications</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @loan_types.each do |loan_type| %>
+                  <tr class="<%= 'table-secondary' unless loan_type.active? %>">
+                    <td><code><%= loan_type.code %></code></td>
+                    <td><strong><%= loan_type.name %></strong></td>
+                    <td><%= truncate(loan_type.description, length: 50) if loan_type.description.present? %></td>
+                    <td><span class="badge bg-info"><%= loan_type.loan_applications.count %></span></td>
+                    <td>
+                      <% if loan_type.active? %>
+                        <span class="badge bg-success">Active</span>
+                      <% else %>
+                        <span class="badge bg-danger">Inactive</span>
+                      <% end %>
+                    </td>
+                    <td><%= loan_type.created_at.strftime("%d %b %Y") %></td>
+                    <td>
+                      <%= link_to "Edit", admin_edit_loan_type_path(loan_type), class: "btn btn-sm btn-outline-secondary" %>
+                      <% if loan_type.active? %>
+                        <%= link_to "Deactivate",
+                            admin_toggle_loan_type_path(loan_type),
+                            method: :patch,
+                            data: { confirm: "Are you sure you want to deactivate this loan type?" },
+                            class: "btn btn-sm btn-outline-warning" %>
+                      <% else %>
+                        <%= link_to "Activate",
+                            admin_toggle_loan_type_path(loan_type),
+                            method: :patch,
+                            class: "btn btn-sm btn-outline-success" %>
+                      <% end %>
+                      <%= link_to "Delete",
+                          admin_destroy_loan_type_path(loan_type),
+                          method: :delete,
+                          data: { confirm: "Are you sure you want to delete this loan type?" },
+                          class: "btn btn-sm btn-outline-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+
+                <% if @loan_types.empty? %>
+                  <tr>
+                    <td colspan="7" class="text-center py-4">
+                      <p class="text-muted mb-2">No loan types configured yet.</p>
+                      <%= link_to "Add First Loan Type", admin_new_loan_type_path, class: "btn btn-success" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

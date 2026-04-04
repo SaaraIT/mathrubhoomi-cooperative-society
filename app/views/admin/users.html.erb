@@ -1,0 +1,217 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">User Management</h1>
+        <%= link_to "New User", admin_new_user_path, class: "btn btn-success" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search and Filter Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <%= form_tag admin_users_path, method: :get, class: "row g-3" do %>
+            <div class="col-md-4">
+              <label class="form-label">Search by Email</label>
+              <%= text_field_tag :email, params[:email], class: "form-control", placeholder: "Enter email..." %>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Filter by Branch</label>
+              <%= select_tag :branch_id,
+                  options_from_collection_for_select(@branches, :id, :name, params[:branch_id]),
+                  include_blank: "All Branches",
+                  class: "form-select" %>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Status</label>
+              <%= select_tag :status,
+                  options_for_select([["All", ""], ["Active", "active"], ["Inactive", "inactive"]], params[:status]),
+                  class: "form-select" %>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <%= submit_tag "Search", class: "btn btn-primary me-2" %>
+              <%= link_to "Clear", admin_users_path, class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-12 text-end">
+      <span class="text-muted">Total: <%= @users.count %> users</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Branch</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @users.each do |user| %>
+                  <tr class="<%= 'table-secondary' unless user.active? %>">
+                    <td><%= user.name %></td>
+                    <td>
+                      <%= user.email %>
+                      <% unless user.active? %>
+                        <br><small class="text-danger">(Deactivated)</small>
+                      <% end %>
+                    </td>
+                    <td>
+                      <span class="badge bg-<%= case user.role
+                                                when 'super_admin' then 'danger'
+                                                when 'section_head' then 'primary'
+                                                when 'manager' then 'info'
+                                                else 'secondary'
+                                              end %>">
+                        <%= user.role&.humanize || 'Unknown' %>
+                      </span>
+                    </td>
+                    <td>
+                      <% if user.head_office_user? %>
+                        <span class="badge bg-dark">Head Office</span>
+                      <% elsif user.cooperative_branch %>
+                        <%= link_to user.cooperative_branch.name, admin_show_branch_path(user.cooperative_branch),
+                            class: "text-decoration-none" %>
+                      <% else %>
+                        <span class="text-muted">No branch assigned</span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if user.active? %>
+                        <span class="badge bg-success">Active</span>
+                      <% else %>
+                        <span class="badge bg-danger">Inactive</span>
+                      <% end %>
+                    </td>
+                    <td><%= user.created_at.strftime("%B %d, %Y") %></td>
+                    <td>
+                      <%= link_to "Edit", admin_edit_user_path(user), class: "btn btn-sm btn-outline-secondary" %>
+
+                      <% unless user.super_admin? %>
+                        <!-- Transfer Button (only for branch users) -->
+                        <% unless user.section_head? %>
+                          <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#transferModal<%= user.id %>">
+                            Transfer
+                          </button>
+                        <% end %>
+
+                        <!-- Change Role Button -->
+                        <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#roleModal<%= user.id %>">
+                          Role
+                        </button>
+
+                        <!-- Activate/Deactivate Button -->
+                        <% if user.active? %>
+                          <%= link_to "Deactivate",
+                              admin_toggle_user_status_path(user),
+                              method: :patch,
+                              data: { confirm: "Are you sure you want to deactivate this user? They will not be able to login." },
+                              class: "btn btn-sm btn-outline-danger" %>
+                        <% else %>
+                          <%= link_to "Activate",
+                              admin_toggle_user_status_path(user),
+                              method: :patch,
+                              data: { confirm: "Are you sure you want to activate this user?" },
+                              class: "btn btn-sm btn-outline-success" %>
+                        <% end %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Transfer Modals (only for non-head-office users) -->
+<% @users.each do |user| %>
+  <% next if user.super_admin? || user.section_head? %>
+  <div class="modal fade" id="transferModal<%= user.id %>" tabindex="-1" aria-labelledby="transferModalLabel<%= user.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="transferModalLabel<%= user.id %>">Transfer User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <%= form_tag admin_transfer_user_path(user), method: :patch do %>
+          <div class="modal-body">
+            <p>Transfer <strong><%= user.email %></strong> to another branch:</p>
+            <div class="mb-3">
+              <label class="form-label">Select Branch</label>
+              <%= select_tag :branch_id,
+                  options_from_collection_for_select(@branches.reject { |b| b.id == user.cooperative_branch_id }, :id, :name),
+                  class: "form-select",
+                  required: true %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <%= submit_tag "Transfer", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<!-- Role Change Modals -->
+<% @users.each do |user| %>
+  <% next if user.super_admin? %>
+  <div class="modal fade" id="roleModal<%= user.id %>" tabindex="-1" aria-labelledby="roleModalLabel<%= user.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="roleModalLabel<%= user.id %>">Change User Role</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <%= form_tag admin_change_user_role_path(user), method: :patch do %>
+          <div class="modal-body">
+            <p>Change role for <strong><%= user.email %></strong>:</p>
+            <div class="mb-3">
+              <label class="form-label">Select Role</label>
+              <%= select_tag :role,
+                  options_for_select([
+                    ["Section Head (Head Office)", "section_head"],
+                    ["Manager", "manager"],
+                    ["Staff", "staff"]
+                  ], user.role),
+                  class: "form-select",
+                  required: true %>
+            </div>
+            <% if user.cooperative_branch.present? %>
+              <div class="alert alert-info small">
+                <strong>Note:</strong> Changing role to "Section Head" will remove this user from their current branch as Section Heads belong to Head Office.
+              </div>
+            <% end %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <%= submit_tag "Change Role", class: "btn btn-warning" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

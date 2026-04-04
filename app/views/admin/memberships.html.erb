@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">All Memberships</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <%= form_tag admin_memberships_path, method: :get, class: "row g-2 align-items-end" do %>
+        <div class="col-md-2">
+          <label class="form-label small">Branch</label>
+          <%= select_tag :branch_id,
+              options_from_collection_for_select(@branches, :id, :name, params[:branch_id]),
+              include_blank: "All Branches",
+              class: "form-select form-select-sm" %>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Name</label>
+          <%= text_field_tag :name, params[:name], class: "form-control form-control-sm", placeholder: "Search name..." %>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Mobile</label>
+          <%= text_field_tag :mobile, params[:mobile], class: "form-control form-control-sm", placeholder: "Search mobile..." %>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Aadhaar</label>
+          <%= text_field_tag :aadhaar, params[:aadhaar], class: "form-control form-control-sm", placeholder: "Search aadhaar..." %>
+        </div>
+        <div class="col-md-2">
+          <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
+          <%= link_to "Clear", admin_memberships_path, class: "btn btn-outline-secondary btn-sm" %>
+        </div>
+        <div class="col-md-2 text-end">
+          <span class="text-muted small">Total: <%= @memberships.count %> members</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Aadhaar</th>
+                  <th>Mobile</th>
+                  <th>Branch</th>
+                  <th>Created</th>
+                  <th>Created By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @memberships.each do |member| %>
+                  <tr>
+                    <td>
+                      <strong><%= member.name %></strong>
+                      <br>
+                      <small class="text-muted">
+                        <%= member.father_or_husband == "Husband" ? "W/O" : "S/O" %> <%= member.father_or_husband_name %>
+                      </small>
+                    </td>
+                    <td><%= member.aadhaar_number %></td>
+                    <td><%= member.mobile_number %></td>
+                    <td>
+                      <span class="badge bg-info"><%= member.cooperative_branch&.name %></span>
+                    </td>
+                    <td><%= member.created_at.strftime("%d %b %Y") %></td>
+                    <td><%= member.creator&.name %></td>
+                    <td>
+                      <%= link_to "View", member_path(member), class: "btn btn-sm btn-outline-primary", target: "_blank" %>
+                      <%= link_to "Edit", edit_member_path(member), class: "btn btn-sm btn-warning", target: "_blank" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
